@@ -22,6 +22,8 @@ import io.netty.util.internal.StringUtil;
 import java.lang.reflect.Constructor;
 
 /**
+ * channel 工厂类，根据传递进来的class的构造函数，进行构造， 限定了类必须是Channel的子类
+ *
  * A {@link ChannelFactory} that instantiates a new {@link Channel} by invoking its default constructor reflectively.
  */
 public class ReflectiveChannelFactory<T extends Channel> implements ChannelFactory<T> {
@@ -38,6 +40,11 @@ public class ReflectiveChannelFactory<T extends Channel> implements ChannelFacto
         }
     }
 
+    /**
+     * 调用构造函数初始化
+     *
+     * @return
+     */
     @Override
     public T newChannel() {
         try {
