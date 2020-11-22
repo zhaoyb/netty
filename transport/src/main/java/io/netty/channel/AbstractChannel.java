@@ -451,7 +451,9 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
 
         @Override
         public final void register(EventLoop eventLoop, final ChannelPromise promise) {
+            // 参数校验
             ObjectUtil.checkNotNull(eventLoop, "eventLoop");
+            // 是否已经注册
             if (isRegistered()) {
                 promise.setFailure(new IllegalStateException("registered to an event loop already"));
                 return;
@@ -492,9 +494,12 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                 if (!promise.setUncancellable() || !ensureOpen(promise)) {
                     return;
                 }
+                // 是否首次注册
                 boolean firstRegistration = neverRegistered;
                 doRegister();
+                // 设置首次注册为false
                 neverRegistered = false;
+                // 设置已注册为true
                 registered = true;
 
                 // Ensure we call handlerAdded(...) before we actually notify the promise. This is needed as the
@@ -513,6 +518,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                         // again so that we process inbound data.
                         //
                         // See https://github.com/netty/netty/issues/4805
+                        // 这里关注accept事件
                         beginRead();
                     }
                 }

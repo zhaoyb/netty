@@ -431,7 +431,7 @@ public final class PlatformDependent {
     /**
      * Creates a new fastest {@link ConcurrentMap} implementation for the current platform.
      */
-    public static <K, V> ConcurrentMap<K, V> newConcurrentHashMap() {
+    public static <K, V> ConcurrentMap<K, V>  newConcurrentHashMap() {
         return new ConcurrentHashMap<K, V>();
     }
 
