@@ -61,7 +61,17 @@ public class DefaultChannelPipeline implements ChannelPipeline {
     private static final AtomicReferenceFieldUpdater<DefaultChannelPipeline, MessageSizeEstimator.Handle> ESTIMATOR =
             AtomicReferenceFieldUpdater.newUpdater(
                     DefaultChannelPipeline.class, MessageSizeEstimator.Handle.class, "estimatorHandle");
+    /**
+     * handler 双向链表 头
+     *
+     */
     final AbstractChannelHandlerContext head;
+
+    /**
+     *
+     * handler 双向链表 尾
+     *
+     */
     final AbstractChannelHandlerContext tail;
 
     private final Channel channel;
@@ -90,6 +100,7 @@ public class DefaultChannelPipeline implements ChannelPipeline {
     private boolean registered;
 
     protected DefaultChannelPipeline(Channel channel) {
+        // ChannelPipeline 也持有channel对象
         this.channel = ObjectUtil.checkNotNull(channel, "channel");
         succeededFuture = new SucceededChannelFuture(channel, null);
         voidPromise =  new VoidChannelPromise(channel, true);
@@ -97,6 +108,7 @@ public class DefaultChannelPipeline implements ChannelPipeline {
         tail = new TailContext(this);
         head = new HeadContext(this);
 
+        // 注意这里组装的是一个双向链表
         head.next = tail;
         tail.prev = head;
     }

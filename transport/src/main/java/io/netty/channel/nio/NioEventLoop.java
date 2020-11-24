@@ -114,6 +114,9 @@ public final class NioEventLoop extends SingleThreadEventLoop {
     }
 
     /**
+     *
+     * 一个eventloop 对应唯一一个selector
+     *
      * The NIO {@link Selector}.
      */
     private Selector selector;
@@ -179,7 +182,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
     private SelectorTuple openSelector() {
         final Selector unwrappedSelector;
         try {
-            // 选择器，打开选择器
+            // 选择器，打开选择器，JDK原生调用
             unwrappedSelector = provider.openSelector();
         } catch (IOException e) {
             throw new ChannelException("failed to open a new selector", e);
@@ -332,6 +335,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
 
     private void register0(SelectableChannel ch, int interestOps, NioTask<?> task) {
         try {
+            // 调用JDK原生进行注册
             ch.register(unwrappedSelector, interestOps, task);
         } catch (Exception e) {
             throw new EventLoopException("failed to register a channel", e);
@@ -442,6 +446,11 @@ public final class NioEventLoop extends SingleThreadEventLoop {
         }
     }
 
+    /**
+     *
+     * 不断循环迭代
+     *
+     */
     @Override
     protected void run() {
         int selectCnt = 0;
@@ -474,6 +483,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
                             try {
                                 if (!hasTasks()) {
                                     // 查询就绪的事件数
+                                    //
                                     strategy = select(curDeadlineNanos);
                                 }
                             } finally {
@@ -504,6 +514,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
                 if (ioRatio == 100) {
                     try {
                         if (strategy > 0) {
+                            // 处理扫描出来的Key
                             processSelectedKeys();
                         }
                     } finally {
@@ -738,6 +749,8 @@ public final class NioEventLoop extends SingleThreadEventLoop {
 
             // Also check for readOps of 0 to workaround possible JDK bug which may otherwise lead
             // to a spin loop
+            // SelectionKey.OP_READ 或 SelectionKey.OP_ACCEPT 就绪
+            // readyOps 是防止空轮询
             if ((readyOps & (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != 0 || readyOps == 0) {
                 unsafe.read();
             }
@@ -836,6 +849,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
 
     private int select(long deadlineNanos) throws IOException {
         if (deadlineNanos == NONE) {
+            //JDK 原生方法
             return selector.select();
         }
         // Timeout will only be 0 if deadline is within 5 microsecs

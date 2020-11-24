@@ -77,16 +77,22 @@ import java.net.SocketAddress;
 public interface Channel extends AttributeMap, ChannelOutboundInvoker, Comparable<Channel> {
 
     /**
+     * 返回全局唯一ID
+     *
      * Returns the globally unique identifier of this {@link Channel}.
      */
     ChannelId id();
 
     /**
+     * 返回注册到的eventloop
+     *
      * Return the {@link EventLoop} this {@link Channel} was registered to.
      */
     EventLoop eventLoop();
 
     /**
+     * 父channel
+     *
      * Returns the parent of this channel.
      *
      * @return the parent channel.
@@ -95,31 +101,43 @@ public interface Channel extends AttributeMap, ChannelOutboundInvoker, Comparabl
     Channel parent();
 
     /**
+     * channel 配置
+     *
      * Returns the configuration of this channel.
      */
     ChannelConfig config();
 
     /**
+     * channel 是否打开
+     *
      * Returns {@code true} if the {@link Channel} is open and may get active later
      */
     boolean isOpen();
 
     /**
+     * 是否已经注册到EventLoop
+     *
      * Returns {@code true} if the {@link Channel} is registered with an {@link EventLoop}.
      */
     boolean isRegistered();
 
     /**
+     * 是否激活
+     *
      * Return {@code true} if the {@link Channel} is active and so connected.
      */
     boolean isActive();
 
     /**
+     *
+     * 元数据
      * Return the {@link ChannelMetadata} of the {@link Channel} which describe the nature of the {@link Channel}.
      */
     ChannelMetadata metadata();
 
     /**
+     * 返回该channel绑定的本地地址
+     *
      * Returns the local address where this channel is bound to.  The returned
      * {@link SocketAddress} is supposed to be down-cast into more concrete
      * type such as {@link InetSocketAddress} to retrieve the detailed
@@ -131,6 +149,8 @@ public interface Channel extends AttributeMap, ChannelOutboundInvoker, Comparabl
     SocketAddress localAddress();
 
     /**
+     * 返回channel连接的远程地址
+     *
      * Returns the remote address where this channel is connected to.  The
      * returned {@link SocketAddress} is supposed to be down-cast into more
      * concrete type such as {@link InetSocketAddress} to retrieve the detailed
@@ -178,6 +198,8 @@ public interface Channel extends AttributeMap, ChannelOutboundInvoker, Comparabl
     Unsafe unsafe();
 
     /**
+     * 返回分配的的ChannelPipeline
+     *
      * Return the assigned {@link ChannelPipeline}.
      */
     ChannelPipeline pipeline();
@@ -187,9 +209,20 @@ public interface Channel extends AttributeMap, ChannelOutboundInvoker, Comparabl
      */
     ByteBufAllocator alloc();
 
+    /**
+     * IO 操作读数据
+     *
+     * @return
+     */
     @Override
     Channel read();
 
+    /**
+     *
+     * IO 操作 刷新
+     *
+     * @return
+     */
     @Override
     Channel flush();
 
@@ -215,12 +248,16 @@ public interface Channel extends AttributeMap, ChannelOutboundInvoker, Comparabl
         RecvByteBufAllocator.Handle recvBufAllocHandle();
 
         /**
+         * 本地地址
+         *
          * Return the {@link SocketAddress} to which is bound local or
          * {@code null} if none.
          */
         SocketAddress localAddress();
 
         /**
+         * 远程地址
+         *
          * Return the {@link SocketAddress} to which is bound remote or
          * {@code null} if none is bound yet.
          */

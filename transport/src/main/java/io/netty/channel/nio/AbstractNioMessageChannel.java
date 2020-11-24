@@ -72,15 +72,18 @@ public abstract class AbstractNioMessageChannel extends AbstractNioChannel {
             try {
                 try {
                     do {
+                        // 读取消息到指定数组
                         int localRead = doReadMessages(readBuf);
+                        // 读取到无数据，表示读取完毕， 跳出循环
                         if (localRead == 0) {
                             break;
                         }
+                        // 正常情况下，不会出现下面的分支
                         if (localRead < 0) {
                             closed = true;
                             break;
                         }
-
+                        // 递增 读取到的数量
                         allocHandle.incMessagesRead(localRead);
                     } while (allocHandle.continueReading());
                 } catch (Throwable t) {
@@ -92,13 +95,16 @@ public abstract class AbstractNioMessageChannel extends AbstractNioChannel {
                     readPending = false;
                     pipeline.fireChannelRead(readBuf.get(i));
                 }
+                // 清空
                 readBuf.clear();
+                // 完成
                 allocHandle.readComplete();
+                // 触发 Channel readComplete 事件到 pipeline 中
                 pipeline.fireChannelReadComplete();
 
                 if (exception != null) {
                     closed = closeOnReadError(exception);
-
+                    // 触发 exceptionCaught 事件到 pipeline 中
                     pipeline.fireExceptionCaught(exception);
                 }
 
