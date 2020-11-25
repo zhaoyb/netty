@@ -76,6 +76,12 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
 
     private final Queue<Runnable> taskQueue;
 
+
+    /**
+     *
+     * 每个nioeventloop 对应一个线程
+     *
+     */
     private volatile Thread thread;
     @SuppressWarnings("unused")
     private volatile ThreadProperties threadProperties;

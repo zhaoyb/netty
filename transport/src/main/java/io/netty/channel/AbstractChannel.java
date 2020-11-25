@@ -72,7 +72,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
         this.parent = parent;
         id = newId();
         unsafe = newUnsafe();
-        // 这里创建了pipeline
+        // 注意 ： 这里创建了pipeline ， 也就是说channel会有一个与之对应的channelpipline
         pipeline = newChannelPipeline();
     }
 

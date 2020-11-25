@@ -80,7 +80,7 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
     private final ServerSocketChannelConfig config;
 
     /**
-     * 工厂类 会调用此构造函数
+     * 工厂 会调用此构造函数
      *
      * Create a new instance
      */
